@@ -3,6 +3,7 @@
 
 #include "ScillBlueprintClasses/ScillClient.h"
 
+#include "HttpModule.h"
 #include "ScillApiWrapper/ScillApiAuthApiOperations.h"
 #include "ScillApiWrapper/ScillApiEventsApiOperations.h"
 #include "ScillApiWrapper/ScillApiLeaderboardsApiOperations.h"
@@ -317,17 +318,27 @@ void UScillClient::GetAllPersonalChallenges(FChallengeCategoryArrayReceived resp
 
 void UScillClient::GetPersonalChallenges(FChallengeCategoryArrayReceived responseReceived)
 {
-	auto request = ScillSDK::ScillApiChallengesApi::GetPersonalChallengesRequest();
+	// auto request = ScillSDK::ScillApiChallengesApi::GetPersonalChallengesRequest();
+	//
+	// request.AppId = AppId;
 
-	request.AppId = AppId;
+	
 
 	FGuid guid = FGuid::NewGuid();
-
 	callbackMapChallengeCategoryArrayReceived.Add(guid, responseReceived);
 
 	auto delegate = ScillSDK::ScillApiChallengesApi::FGetPersonalChallengesDelegate::CreateUObject(this, &UScillClient::ReceiveGetPersonalChallengesResponse, guid);
 
-	challengesApi.GetPersonalChallenges(request, delegate);
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> HttpRequest = FHttpModule::Get().CreateRequest();
+	HttpRequest->OnProcessRequestComplete().BindUObject(this, &UScillClient::OnGetPersonalChallengesReceived);
+	HttpRequest->SetURL("https://pcs.scill.4players.io/api/v1/challenges/personal/all/597737952688570369");
+	HttpRequest->SetVerb("GET");
+	HttpRequest->SetHeader("Authorization", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImFwcF9pZCI6IjU5NzczNzk1MjY4ODU3MDM2OSIsImZ1c2lvbl9pZCI6IjU2MDcxMiIsInVzZXJfaWQiOiI1MCJ9LCJhdWQiOiJVUyBTQ0lMTCIsImV4cCI6MTY0NDA3NDAwMywiaWF0IjoxNjQzOTAxMjAzLCJpc3MiOiJ1cy5zY2lsbGdhbWUuY29tIiwibmJmIjoxNjQzOTAxMTg4LCJzdWIiOiI1MCJ9.raH2S0w3L7gAWVD9nZmGEoCQ6BMxsUE0RzIZNYXXuR986ZFl4FE4w6PG0m2-TYoPnLoDOcwfHeVIH9qFgFCZI4RNlLBLQsSRyB6N9FEDEScdqMkfn8I0qfK7CQZ0oi33UpujepaWoc_7ZJOysBr1-WKFkafMEXZCBp_gYngWHEiIZzDpaRkrXK9G9BZmqtCb7CCmajgOyBzHonK9ogL0E1qRLer1CaiCAJswLkRgIEAQVbp8oRCKgQOBGtjxJdGD_hWah80c8N04r_4OYeBiUFsjsyYUUpkPwWpoYMLSYlDXNXMJkarLy6Sf1aMSqPGxU-mV0GSbzn2n6D1gxs9r2Q");
+	HttpRequest->SetHeader("Content-Type", "application/json");
+	HttpRequest->ProcessRequest();
+
+	
+	// challengesApi.GetPersonalChallenges(request, delegate);
 }
 
 void UScillClient::GetUnresolvedPersonalChallenges(FChallengeCategoryArrayReceived responseReceived)
@@ -1264,5 +1275,20 @@ void UScillClient::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UScillClient::OnGetPersonalChallengesReceived(FHttpRequestPtr Request, FHttpResponsePtr Response,
+	bool bWasSuccessful)
+{
+	if(bWasSuccessful)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Successfully received Personal Challenges!!!"));
+		FString ContentAsString = Response.Get()->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("Received Content: %s"), *ContentAsString);
+
+	}else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Request unsuccessful"));
+	}
 }
 

@@ -93,7 +93,8 @@ private:
     void OnGetActivePersonalChallengesResponse(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetActivePersonalChallengesDelegate Delegate) const;
     void OnGetAllPersonalChallengesResponse(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetAllPersonalChallengesDelegate Delegate) const;
     void OnGetPersonalChallengeByIdResponse(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetPersonalChallengeByIdDelegate Delegate) const;
-    void OnGetPersonalChallengesResponse(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetPersonalChallengesDelegate Delegate) const;
+
+	void OnGetPersonalChallengesResponse(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetPersonalChallengesDelegate Delegate) const;
     void OnGetUnresolvedPersonalChallengesResponse(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetUnresolvedPersonalChallengesDelegate Delegate) const;
     void OnResetUserAppChallengesResponse(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FResetUserAppChallengesDelegate Delegate) const;
     void OnUnlockPersonalChallengeResponse(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FUnlockPersonalChallengeDelegate Delegate) const;
