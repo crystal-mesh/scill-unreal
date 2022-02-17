@@ -807,7 +807,7 @@ FChallenge FChallenge::FromScillApiChallenge(const ScillSDK::ScillApiChallenge o
 	n.ChallengeGoalCondition = o.ChallengeGoalCondition.Get(0);
 	n.ChallengeXp = o.ChallengeXp.Get(0);
 	n.UserChallengeStatus = o.UserChallengeStatus.Get(0);
-
+	n.ChallengeAutoActivated = o.ChallengeAutoActivated.Get(false);
 	n.Repeatable = o.Repeatable.Get(false);
 	n.IsClaimed = o.IsClaimed.Get(false);
 	n.UserChallengeIsClaimed = o.UserChallengeIsClaimed.Get(false);
